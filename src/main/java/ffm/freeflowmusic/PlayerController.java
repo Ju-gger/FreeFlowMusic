@@ -51,7 +51,7 @@ public class PlayerController implements Initializable {
 
         songs = new ArrayList<File>();
 
-        directory = new File("C:\\Users\\Yousef\\IdeaProjects\\FreeFlowMusic\\src\\main\\resources\\ffm\\freeflowmusic\\music");
+        directory = new File("src/main/resources/ffm/freeflowmusic/music");
 
         files = directory.listFiles(); // will get all the files in our directory ("music")
 
