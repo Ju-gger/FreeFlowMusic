@@ -4,17 +4,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.media.*;
+import javafx.scene.media.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
+
+import static javafx.util.Duration.seconds;
 
 import java.io.File;
 import java.net.URL;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @SuppressWarnings("FieldCanBeLocal")
 public class PlayerController implements Initializable {
@@ -53,7 +51,7 @@ public class PlayerController implements Initializable {
 
         songs = new ArrayList<File>();
 
-        directory = new File("ffm/freeflowmusic/music");
+        directory = new File("C:\\Users\\Yousef\\IdeaProjects\\FreeFlowMusic\\src\\main\\resources\\ffm\\freeflowmusic\\music");
 
         files = directory.listFiles(); // will get all the files in our directory ("music")
 
@@ -99,7 +97,7 @@ public class PlayerController implements Initializable {
         if (mediaPlayer != null) {
             double currentTime = mediaPlayer.getCurrentTime().toSeconds();
             double newTime = Math.max(currentTime - 10, 0); // Ensures it doesn't go below 0
-            mediaPlayer.seek(Duration.seconds(newTime));
+            mediaPlayer.seek(seconds(newTime));
         }
     }
 
@@ -109,7 +107,7 @@ public class PlayerController implements Initializable {
             double currentTime = mediaPlayer.getCurrentTime().toSeconds();
             double endTime = mediaPlayer.getTotalDuration().toSeconds();
             double newTime = Math.min(currentTime + 10, endTime); // Ensures it doesn't exceed the song's length
-            mediaPlayer.seek(Duration.seconds(newTime));
+            mediaPlayer.seek(seconds(newTime));
         }
     }
 
@@ -156,7 +154,7 @@ public class PlayerController implements Initializable {
     public void PreviousSong() {
         if (mediaPlayer.getCurrentTime().toSeconds() >= 5) {
             songDurationBar.setProgress(0);
-            mediaPlayer.seek(Duration.seconds(0));
+            mediaPlayer.seek(seconds(0));
         } else { // go to the previous song
             songNumber = (songNumber > 0) ? songNumber - 1 : songs.size() - 1; // if the songNumber is greater than 0 SongNumber-= 1 else go to last song
             playSelectedSong();
@@ -177,15 +175,15 @@ public class PlayerController implements Initializable {
             public void run() {
                 isRunning = true;
                 double current = mediaPlayer.getCurrentTime().toSeconds();
-                double end = mediaPlayer.getDuration().toSeconds();
+                double end = mediaPlayer.getTotalDuration().toSeconds();
 
                 songDurationBar.setProgress(current/end);
 
                 if ( current/end  == 1){
                     cancelTimer();
                 }
-            }
-        }
+            };
+        };
 
         timer.scheduleAtFixedRate(task,0,1000);
 

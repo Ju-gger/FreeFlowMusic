@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane blendMode="ADD" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
             prefHeight="790.0" prefWidth="1569.0" style="-fx-background-color: #6c64c2;"
             xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ffm.freeflowmusic.PlayerController">
    <children>
@@ -23,7 +23,7 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <ProgressBar fx:id="durationBar" layoutX="94.0" layoutY="569.0" prefHeight="18.0" prefWidth="1210.0" progress="0.0" />
+      <ProgressBar fx:id="songDurationBar" layoutX="94.0" layoutY="569.0" prefHeight="18.0" prefWidth="1210.0" progress="0.0" />
       <Button fx:id="rewindButton" layoutX="436.0" layoutY="680.0" mnemonicParsing="false" onAction="#Rewind" prefHeight="53.0" prefWidth="131.0" text="Rewind (10 secs)">
          <font>
             <Font size="14.0" />
@@ -44,7 +44,7 @@
             <Font size="18.0" />
          </font>
       </CheckBox>
-      <Slider fx:id="volumeSlider" layoutX="1430.0" layoutY="511.0" max="200.0" orientation="VERTICAL" prefHeight="223.0" prefWidth="14.0" value="100.0" />
+      <Slider fx:id="volumeSlider" layoutX="1430.0" layoutY="511.0" max="100.0" orientation="VERTICAL" prefHeight="223.0" prefWidth="14.0" value="50.0" />
       <CheckBox fx:id="shuffleCheckbox" layoutX="94.0" layoutY="680.0" mnemonicParsing="false" onAction="#Shuffle" prefHeight="53.0" prefWidth="96.0" text="Shuffle">
          <font>
             <Font size="18.0" />
