@@ -14,7 +14,7 @@
         <tabs>
           <Tab>
             <content>
-              <AnchorPane fx:id="musicView" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              <AnchorPane fx:id="musicView" maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="1462.0" />
             </content>
                <graphic>
                   <Label alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Music">
@@ -30,7 +30,7 @@
           </Tab>
             <Tab>
                <content>
-                  <AnchorPane fx:id="albumView" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="albumView" maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="200.0" />
                </content>
                <graphic>
                   <Label alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Albums">
@@ -46,7 +46,7 @@
             </Tab>
             <Tab>
                <content>
-                  <AnchorPane fx:id="discView" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="discView" maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="200.0" />
                </content>
                <graphic>
                   <Label alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Discover">
@@ -62,7 +62,7 @@
             </Tab>
             <Tab>
                <content>
-                  <AnchorPane fx:id="listView" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="listView" maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="200.0" />
                </content>
                <graphic>
                   <Label alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Playlists">
@@ -78,7 +78,7 @@
             </Tab>
             <Tab>
                <content>
-                  <AnchorPane fx:id="settingsView" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  <AnchorPane fx:id="settingsView" maxHeight="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="200.0" />
                </content>
                <graphic>
                   <Label alignment="TOP_LEFT" maxWidth="1.7976931348623157E308" prefWidth="75.0" text="Settings">
@@ -94,5 +94,7 @@
             </Tab>
         </tabs>
       </TabPane>
+      <AnchorPane fx:id="musicViewSmall" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="161.0" prefWidth="1462.0" StackPane.alignment="BOTTOM_RIGHT" />
+      <AnchorPane fx:id="musicViewLarge" maxWidth="-Infinity" prefHeight="720.0" prefWidth="1461.0" visible="false" StackPane.alignment="CENTER_RIGHT" />
    </children>
 </StackPane>

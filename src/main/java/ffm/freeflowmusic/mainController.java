@@ -13,16 +13,19 @@ import java.util.ResourceBundle;
 public class mainController implements Initializable {
 
     @FXML
-    private AnchorPane musicView, albumView, discView, listView, settingsView;
+    private AnchorPane musicView, albumView, discView, listView, settingsView, musicViewSmall, musicViewLarge;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         Parent root = null;
         try {
-            root = FXMLLoader.load(getClass().getResource("musicplayer-ui.fxml"));
+            root = FXMLLoader.load(getClass().getResource("songview-ui.fxml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        //root.setLayoutX(16);
+        //root.setLayoutY(16);
 
         musicView.getChildren().add(root); //adds fxml to the tabs of the main scene
 
@@ -58,5 +61,13 @@ public class mainController implements Initializable {
         }
 
         settingsView.getChildren().add(root);
+
+        try {
+            root = FXMLLoader.load(getClass().getResource("smallplayer-ui.fxml"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        musicViewSmall.getChildren().add(root);
     }
 }

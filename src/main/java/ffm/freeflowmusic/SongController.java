@@ -1,0 +1,29 @@
+/*
+* class for the song list in main view controller for each individual song
+* to do:
+*   -on fav add song to favorite playlist
+*   -add music select method to send music to play to playerController class*/
+
+package ffm.freeflowmusic;
+
+import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+
+public class SongController {
+    @FXML
+    private ImageView favImage;
+    @FXML
+    private Label numberLabel;
+
+    /*method to add a song to fav playlist*/
+    public void onFavSelected(){
+        favImage.setVisible(!favImage.isVisible());
+    }
+
+    public void songSelected(){
+        PlayerController.selectSong(Integer.parseInt(numberLabel.getText()) - 1);
+    }
+}

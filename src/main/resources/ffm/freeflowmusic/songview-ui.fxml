@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="569.0" prefWidth="1401.0" style="-fx-background-color: #6c64c2;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ffm.freeflowmusic.SongViewController">
+   <children>
+      <ScrollPane hbarPolicy="NEVER" layoutX="14.0" layoutY="42.0" prefHeight="503.0" prefWidth="1386.0">
+        <content>
+          <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="0.0" minWidth="0.0" prefWidth="1480.0" style="-fx-background-color: #6c64c2;">
+               <children>
+                  <VBox fx:id="songView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" />
+                  <VBox fx:id="searchSongView" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" visible="false" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <TextField fx:id="findTextfield" layoutX="14.0" layoutY="14.0" onKeyPressed="#onSongLookUp" prefHeight="25.0" prefWidth="314.0" />
+   </children>
+</AnchorPane>

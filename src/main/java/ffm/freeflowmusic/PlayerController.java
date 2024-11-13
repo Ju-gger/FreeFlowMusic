@@ -1,21 +1,38 @@
+/*
+* Class is controller for the music player that shows UI to user to control aspects of a selected MP3 file.
+* Will play a song when needed/selected by user or a full playlist/album when selected.
+* Class changes
+*   -added a play selected song that grabs song from song list in SongViewController
+*   -temp removed initialize method until better use is found for it
+*   -changed songs to songQueue that when full the music player can cycle through
+* To Do:
+*   -check for a queue to cycle through
+*   -make another array to allow for queue repeat
+*   -update all functions to use the songQueue more effectively
+*   -change play/shuffle to remove selected song so it will not be selected again (low priority)
+*   -update array to be a stack instead java.util.Stack Stack<File> songQueue*/
+
 package ffm.freeflowmusic;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.media.*;
 import javafx.scene.control.*;
 
 import static javafx.util.Duration.seconds;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
 import java.util.*;
 
 @SuppressWarnings("FieldCanBeLocal")
-public class PlayerController implements Initializable {
+public class PlayerController implements Initializable { //removed for now to test code
 
     /* XML References */
     @FXML
@@ -33,19 +50,19 @@ public class PlayerController implements Initializable {
     @FXML
     private Label artistLabel;
 
-
     /* Global Variables */
     private Media media;
     private MediaPlayer mediaPlayer;
     private File directory;
     private File[] files;   // File of songs
-    private ArrayList<File> songs; // For mp3 files songs
-    private int songNumber; // index out of array of songs
+    private static ArrayList<File> songQueue = new ArrayList<File>(); // For mp3 files songs
+    private int songNumber = 0; // index out of array of songs
     private Timer timer; // track our progressBar
     private TimerTask task;
     private boolean isRunning;
     private boolean isPaused = true;
 
+    /* removed to test code
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
@@ -75,9 +92,44 @@ public class PlayerController implements Initializable {
         });
 
         songDurationBar.setStyle("-fx-accent: #000000;"); // Change color of progress bar
+    }*/
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle){
+        volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
+            }
+        });
+    }
+
+    /*plays a singular song selected from music list*/
+    public static void selectSong(int songNum){
+        File song = SongViewController.getSong(songNum);
+        songQueue = new ArrayList<File>();
+        songQueue.add(song);
+    }
+
+    private void getFullSongList(){
+        songQueue = SongViewController.getSongList();
+    }
+
+    /*updates queue to a selected playlist*/
+    public void setQueue(ArrayList<File> userList){
+        songQueue = userList;
     }
 
     public void PlayPause(){
+        if(songQueue.isEmpty()){
+            getFullSongList();
+        }
+
+        if(mediaPlayer == null){
+            media = new Media(songQueue.get(songNumber).toURI().toString());
+            mediaPlayer = new MediaPlayer(media);
+            songLabel.setText(songQueue.get(songNumber).getName());
+        }
 
         if(isPaused){ //  If currently paused
             isPaused = false;
@@ -122,32 +174,36 @@ public class PlayerController implements Initializable {
 
 
     // The next song could be any random song in the array except for the current one
+    //update to use a queue structure that pops index and moves it to spare array
     public void Shuffle() {
-        if (songs.size() > 1) { // Only shuffle if there is more than one song
+        if (songQueue.size() > 1) { // Only shuffle if there is more than one song
             int randomIndex;
             do {
-                randomIndex = new Random().nextInt(songs.size());
+                randomIndex = new Random().nextInt(songQueue.size());
             } while (randomIndex == songNumber); // Ensure it’s not the current song
 
             songNumber = randomIndex;
-            playSelectedSong();
         }
     }
 
     // Previous and Next Song Helper
     private void playSelectedSong() {
         mediaPlayer.stop();
+
         if (isRunning) {
             cancelTimer();
         }
 
-        media = new Media(songs.get(songNumber).toURI().toString());
+        media = new Media(songQueue.get(songNumber).toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-        songLabel.setText(songs.get(songNumber).getName());
+        Platform.runLater(()->songLabel.setText(songQueue.get(songNumber).getName()));
+        //songLabel.setText(songQueue.get(songNumber).getName());
 
         mediaPlayer.setVolume(volumeSlider.getValue() * 0.01); // Set initial volume
         beginTimer();
         mediaPlayer.play();
+
+        //songQueue.remove(songNumber);
     }
 
 
@@ -156,17 +212,18 @@ public class PlayerController implements Initializable {
             songDurationBar.setProgress(0);
             mediaPlayer.seek(seconds(0));
         } else { // go to the previous song
-            songNumber = (songNumber > 0) ? songNumber - 1 : songs.size() - 1; // if the songNumber is greater than 0 SongNumber-= 1 else go to last song
+            songNumber = (songNumber > 0) ? songNumber - 1 : songQueue.size() - 1; // if the songNumber is greater than 0 SongNumber-= 1 else go to last song
             playSelectedSong();
         }
     }
 
     public void NextSong() {
-        songNumber = (songNumber < songs.size() - 1) ? songNumber + 1 : 0; // if the songNumber is less than 0 SongNumber += 1 else go to first song
+        songNumber = (songNumber < songQueue.size() - 1) ? songNumber + 1 : 0; // if the songNumber is less than 0 SongNumber += 1 else go to first song
         playSelectedSong();
     }
 
 
+    //updated if condition to play next song in queue when currSong is finished
     public void beginTimer(){
         timer = new Timer();
 
@@ -180,7 +237,11 @@ public class PlayerController implements Initializable {
                 songDurationBar.setProgress(current/end);
 
                 if ( current/end  == 1){
-                    cancelTimer();
+                    if ((songQueue.size() == 1)) {
+                        cancelTimer();
+                        return;
+                    }
+                    NextSong();
                 }
             };
         };
@@ -188,6 +249,7 @@ public class PlayerController implements Initializable {
         timer.scheduleAtFixedRate(task,0,1000);
 
     }
+
 
     public void cancelTimer(){
         isRunning = false;
