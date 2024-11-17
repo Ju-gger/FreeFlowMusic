@@ -18,11 +18,13 @@ public class SongController {
     @FXML
     private Label numberLabel;
 
-    /*method to add a song to fav playlist*/
+    /*method to add a song to fav playlist not implemented*/
     public void onFavSelected(){
         favImage.setVisible(!favImage.isVisible());
     }
 
+
+    //need to add a playerController variable so we can call a PlayerController method without making the method static.
     public void songSelected(){
         PlayerController.selectSong(Integer.parseInt(numberLabel.getText()) - 1);
     }

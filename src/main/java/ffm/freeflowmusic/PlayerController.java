@@ -96,15 +96,32 @@ public class PlayerController implements Initializable { //removed for now to te
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
+
+        //https://www.no-copyright-music.com/wp-content/uploads/2021/10/Forestal.mp3
+        //https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/936/royalty-1619082033-7RC2AlRdd1.mp3
+
+        //String audioUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/936/royalty-1619082033-7RC2AlRdd1.mp3";//"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
+
+        //media = new Media(audioUrl);
+        // initializing media player
+        //mediaPlayer = new MediaPlayer(media);
+
+
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
             }
         });
+
+        //mediaPlayer.play();
     }
 
-    /*plays a singular song selected from music list*/
+    /*plays a singular song selected from music list
+    * To do:
+    *   -make method not static to avoid bad code structure.
+    *   -update this method and songQueue var to no longer be static look at discoverController to see an example of how
+    * */
     public static void selectSong(int songNum){
         File song = SongViewController.getSong(songNum);
         songQueue = new ArrayList<File>();
@@ -257,4 +274,11 @@ public class PlayerController implements Initializable { //removed for now to te
     }
 
 
+    //Test method called by discoverController to see if media player will update when called.
+    public void setSong(String[] songInfo) {
+        Platform.runLater(()->songLabel.setText(songInfo[0]));
+        media = new Media(songInfo[3]);
+        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer.play();
+    }
 }

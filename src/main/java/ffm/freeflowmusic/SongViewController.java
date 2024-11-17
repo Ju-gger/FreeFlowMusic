@@ -75,6 +75,7 @@ public class SongViewController implements Initializable {
         }
     }
 
+    //remove static key from this method can pass this class to the song view to do so
     public static File getSong(int songNum){
         return songs.get(songNum);
     }

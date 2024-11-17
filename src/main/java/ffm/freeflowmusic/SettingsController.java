@@ -1,3 +1,10 @@
+/*
+* JUGS
+* To do:
+* Create a song view variable so that we can call it to update where it will search for songs and update the list.
+*/
+
+
 package ffm.freeflowmusic;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

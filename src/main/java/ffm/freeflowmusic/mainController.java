@@ -15,22 +15,37 @@ public class mainController implements Initializable {
     @FXML
     private AnchorPane musicView, albumView, discView, listView, settingsView, musicViewSmall, musicViewLarge;
 
+    //This var is meant to represent the main music player used throughout the application.
+    private PlayerController mediaPlayer = null;
+
+    //method loads all views that are needed to allow a user to use the application.
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
         Parent root = null;
+
+        //We use the below structure to load the view so we can grab its controller to assign our music player.
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("smallplayer-ui.fxml"));
+            root = loader.load();
+            mediaPlayer = loader.getController();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        musicViewSmall.getChildren().add(root);
+
         try {
             root = FXMLLoader.load(getClass().getResource("songview-ui.fxml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        //root.setLayoutX(16);
-        //root.setLayoutY(16);
+        musicView.getChildren().add(root);
 
-        musicView.getChildren().add(root); //adds fxml to the tabs of the main scene
+        /*
+        //remove comments once fxml files are made
 
-        /*//remove comments once fxml files are made
-        * try {
+        try {
             root = FXMLLoader.load(getClass().getResource("album-ui.fxml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -38,21 +53,28 @@ public class mainController implements Initializable {
 
         albumView.getChildren().add(root);
         *
-        * try {
-            root = FXMLLoader.load(getClass().getResource("discover-ui.fxml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        discView.getChildren().add(root);
         *
-        * try {
+        *
+        try {
             root = FXMLLoader.load(getClass().getResource("playlist-ui.fxml"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        listView.getChildren().add(root);*/
+        listView.getChildren().add(root);
+        */
+
+        //method uses loader to first pass our media player loaded earlier to our discover view for it to use.
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("discoverview-ui.fxml"));
+            loader.setControllerFactory(mainController -> new DiscoverController(mediaPlayer));
+            root = loader.load();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        discView.getChildren().add(root);
 
         try {
             root = FXMLLoader.load(getClass().getResource("settings-ui.fxml"));
@@ -61,13 +83,5 @@ public class mainController implements Initializable {
         }
 
         settingsView.getChildren().add(root);
-
-        try {
-            root = FXMLLoader.load(getClass().getResource("smallplayer-ui.fxml"));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        musicViewSmall.getChildren().add(root);
     }
 }
