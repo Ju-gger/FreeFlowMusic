@@ -25,6 +25,7 @@ public class SongController {
 
 
     //need to add a playerController variable so we can call a PlayerController method without making the method static.
+    //Can make this song directly call media player or can call a method in SongViewController to do so.
     public void songSelected(){
         PlayerController.selectSong(Integer.parseInt(numberLabel.getText()) - 1);
     }

@@ -64,7 +64,7 @@ public class mainController implements Initializable {
         listView.getChildren().add(root);
         */
 
-        //method uses loader to first pass our media player loaded earlier to our discover view for it to use.
+        //method uses loader to first pass our media player loaded earlier to our DiscoverController/discover view for it to use.
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("discoverview-ui.fxml"));
             loader.setControllerFactory(mainController -> new DiscoverController(mediaPlayer));

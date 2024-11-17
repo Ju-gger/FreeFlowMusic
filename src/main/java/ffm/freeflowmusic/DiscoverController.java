@@ -65,7 +65,7 @@ public class DiscoverController implements Initializable {
         this.mediaPlayer = mediaPlayer;
     }
 
-    //function to test if the music player can be called to play a song.
+    //A test method to see if the music player can be called to play a song/ update media player.
     public void testFunc(){
         mediaPlayer.setSong(songDB[0]);
     }

@@ -80,6 +80,7 @@ public class SongViewController implements Initializable {
         return songs.get(songNum);
     }
 
+    //method called by songs in list need to pass this class to the created Song Controllers to remove static keyword.
     public static ArrayList<File> getSongList() {
         return songs;
     }

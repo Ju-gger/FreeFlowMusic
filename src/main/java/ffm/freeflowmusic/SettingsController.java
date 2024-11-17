@@ -1,7 +1,7 @@
 /*
-* JUGS
 * To do:
-* Create a song view variable so that we can call it to update where it will search for songs and update the list.
+*   -Create a song view variable so that we can call it to update where it will search for songs and update the list.
+*   -pass the string retrived from changeDirectory method to update our song list
 */
 
 

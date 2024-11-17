@@ -120,6 +120,7 @@ public class PlayerController implements Initializable { //removed for now to te
     /*plays a singular song selected from music list
     * To do:
     *   -make method not static to avoid bad code structure.
+    *   -change code to update the song name and other strings in media player
     *   -update this method and songQueue var to no longer be static look at discoverController to see an example of how
     * */
     public static void selectSong(int songNum){
