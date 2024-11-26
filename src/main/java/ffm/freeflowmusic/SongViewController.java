@@ -32,10 +32,7 @@ import javafx.scene.media.MediaPlayer;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class SongViewController implements Initializable {
     @FXML
@@ -44,11 +41,14 @@ public class SongViewController implements Initializable {
     private TextField findTextfield;
     @FXML
     private VBox searchSongView;
+    private Node selectedSongItem = null;  // Track the currently selected song
 
+    private SongController songController;
 
     /* Private Variables */
     private static ArrayList<File> songs; // For mp3 files songs
     private int songNumber = 1; // index out of array of songs
+    private PlayerController playerControllerInstance;
 
     /*initializes the scene to add all the songs found in a given directory
     * to do:
@@ -73,6 +73,7 @@ public class SongViewController implements Initializable {
                 songNumber++;
             }
         }
+
     }
 
     //remove static key from this method can pass this class to the song view to do so
@@ -122,25 +123,51 @@ public class SongViewController implements Initializable {
     *   -update song info to match song data: artist name, album name, song name, duration, tags*/
     private Parent createSongData(File file, int songNum, boolean visFlag){
         Parent root = null;
+
+
+
         try {
-            root = FXMLLoader.load(getClass().getResource("song-ui.fxml"));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("song-ui.fxml")));
+
+            //changes song name to the file name need to update it to name of song NOT file
+            Label numberLabel = (Label) root.lookup("#numberLabel");
+            Label songLabel = (Label) root.lookup("#songLabel");
+            numberLabel.setText(String.valueOf(songNum));
+            songLabel.setText(file.getName());
+
+            if(visFlag){
+                ImageView image =  (ImageView) root.lookup("#heartImage");
+                image.setVisible(false);
+                Button bttn = (Button) root.lookup("#favButton");
+                bttn.setVisible(false);
+            }
+
+
+/*          UNCOMMENT WHEN ABLE TO CALL SONG SELECTED PROPERLY */
+
+            Parent finalRoot = root;
+            root.setOnMouseClicked(event -> {
+                // Remove highlight from the previously selected song
+                if (selectedSongItem != null) {
+                    selectedSongItem.getStyleClass().remove("selected-song");
+                }
+
+                // Highlight the clicked song item
+                finalRoot.getStyleClass().add("selected-song");
+                selectedSongItem = finalRoot;
+
+                // Call the songSelected method manually
+                int songIndex = Integer.parseInt(numberLabel.getText()) - 1;
+                System.out.println("Selected song index: " + songIndex + 1);
+
+                PlayerController.getInstance().selectSong(songIndex);
+
+            });
+
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        //changes song name to the file name need to update it to name of song NOT file
-        Label numberLabel = (Label) root.lookup("#numberLabel");
-        Label songLabel = (Label) root.lookup("#songLabel");
-        numberLabel.setText(String.valueOf(songNum));
-        songLabel.setText(file.getName());
-
-        if(visFlag){
-            ImageView image =  (ImageView) root.lookup("#heartImage");
-            image.setVisible(false);
-            Button bttn = (Button) root.lookup("#favButton");
-            bttn.setVisible(false);
-        }
-
         return root;
     }
 }

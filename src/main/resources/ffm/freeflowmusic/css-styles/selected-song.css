@@ -1,0 +1,5 @@
+.selected-song {
+    -fx-background-color: #8a85f0; /* Lighter color or highlight effect */
+    -fx-border-color: #ffffff;    /* Optional: add a white border for better visibility */
+    -fx-border-width: 2px;
+}

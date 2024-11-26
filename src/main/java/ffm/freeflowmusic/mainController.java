@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class mainController implements Initializable {
@@ -35,7 +36,7 @@ public class mainController implements Initializable {
         musicViewSmall.getChildren().add(root);
 
         try {
-            root = FXMLLoader.load(getClass().getResource("songview-ui.fxml"));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("songview-ui.fxml")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -77,7 +78,7 @@ public class mainController implements Initializable {
         discView.getChildren().add(root);
 
         try {
-            root = FXMLLoader.load(getClass().getResource("settings-ui.fxml"));
+            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("settings-ui.fxml")));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

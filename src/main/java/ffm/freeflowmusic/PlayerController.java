@@ -12,6 +12,11 @@
 *   -change play/shuffle to remove selected song so it will not be selected again (low priority)
 *   -update array to be a stack instead java.util.Stack Stack<File> songQueue*/
 
+/* TODO:
+ * NEEDS TO CONTINUE FROM SELECTED SONG PLAYED
+ * NEEDS TO HIGHLIGHT CURRENT SONG
+ * NEED TO FIX LOOP AND SHUFFLE FUNCTION
+ */
 package ffm.freeflowmusic;
 
 import javafx.application.Platform;
@@ -61,6 +66,16 @@ public class PlayerController implements Initializable { //removed for now to te
     private TimerTask task;
     private boolean isRunning;
     private boolean isPaused = true;
+
+    private static PlayerController instance;
+
+    public PlayerController() {
+        instance = this;
+    }
+
+    public static PlayerController getInstance() {
+        return instance;
+    }
 
     /* removed to test code
     @Override
@@ -114,6 +129,8 @@ public class PlayerController implements Initializable { //removed for now to te
             }
         });
 
+        songDurationBar.setStyle("-fx-accent: #000000;");
+
         //mediaPlayer.play();
     }
 
@@ -123,10 +140,30 @@ public class PlayerController implements Initializable { //removed for now to te
     *   -change code to update the song name and other strings in media player
     *   -update this method and songQueue var to no longer be static look at discoverController to see an example of how
     * */
-    public static void selectSong(int songNum){
-        File song = SongViewController.getSong(songNum);
-        songQueue = new ArrayList<File>();
-        songQueue.add(song);
+    public void selectSong(int songNum){
+        File song = SongViewController.getSong(songNum); // Get the selected song file
+
+        // Set the current song number to the selected song index
+        songNumber = songNum;
+
+        // Stop any currently playing song and reset the timer
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            cancelTimer();
+        }
+
+        // Create a new MediaPlayer for the selected song
+        media = new Media(song.toURI().toString());
+        mediaPlayer = new MediaPlayer(media);
+
+        // Update the song label
+        Platform.runLater(() -> songLabel.setText(song.getName()));
+
+        // Play the selected song
+        mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
+        beginTimer(); // Start the timer for the progress bar
+        mediaPlayer.play();
+
     }
 
     private void getFullSongList(){
