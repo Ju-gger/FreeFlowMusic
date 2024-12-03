@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane stylesheets="@css-styles/selected-song.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" style="-fx-background-color: #6866b3;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ffm.freeflowmusic.SongController">
+<AnchorPane fx:id="basePanel" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="100.0" prefWidth="600.0" style="-fx-background-color: #6866b3;" stylesheets="@css-styles/selected-song.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ffm.freeflowmusic.SongController">
    <Label fx:id="songLabel" layoutX="66.0" layoutY="7.0" prefHeight="43.0" prefWidth="524.0" text="Song Name">
       <font>
          <Font size="29.0" />

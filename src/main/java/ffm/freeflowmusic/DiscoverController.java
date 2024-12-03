@@ -6,11 +6,20 @@
 
 package ffm.freeflowmusic;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -21,7 +30,12 @@ public class DiscoverController implements Initializable {
     @FXML
     private HBox pageNumberBox;
 
-    private PlayerController mediaPlayer;
+    private Button prevButton = null;
+    private int curPageNum = 0;
+    private int songIndex = 0;
+    private SongController[] songViewList = {null,null,null,null};
+    private int maxPageCount = 0;
+    private Node selectedSongItem = null;
     //represents the song database where we would access copy right free music.
     private String[][] songDB = {
             {"Deeper Meaning", "Liborio Conti", "7:10", "https://www.no-copyright-music.com/wp-content/uploads/2021/09/DeeperMeaning.mp3"},
@@ -60,19 +74,252 @@ public class DiscoverController implements Initializable {
 
     };
 
-    //Class constructor will initialize the media player for class to access and call methods.
-    public DiscoverController(PlayerController mediaPlayer){
-        this.mediaPlayer = mediaPlayer;
-    }
-
-    //A test method to see if the music player can be called to play a song/ update media player.
-    public void testFunc(){
-        mediaPlayer.setSong(songDB[0]);
-    }
-
-    //add songs from the songDB array
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+        for (int i=0; i<4; i++){
+            pageViewBox.getChildren().add(createSongData(songDB[i]));
+        }
+        Button bttn = (Button) pageNumberBox.getChildren().get(0);
+        bttn.setUnderline(true);
+        prevButton = bttn;
+
+        maxPageCount = songDB.length/songViewList.length;
+
+        if (songDB.length%songViewList.length != 0){
+            maxPageCount++;
+        }
+    }
+
+    //Called when button clicked to update the page buttons and displayed songs.
+    public void onPageChange(ActionEvent event){
+        Button bttn = null;
+        int prevPage = curPageNum;
+        int testIndex = 0;
+
+        if (prevButton != null) {
+            prevButton.setUnderline(false);
+        }
+        Button button = (Button) event.getSource();
+
+        curPageNum = Integer.parseInt(button.getText()) - 1;
+
+        testIndex = curPageNum;
+
+        if (testIndex-2 <= 0) {
+            testIndex = 3;
+        }else if (testIndex+2 >= maxPageCount) {
+            testIndex = maxPageCount - 2;
+        } else{
+            testIndex = curPageNum+1;
+        }
+
+        bttn = (Button) pageNumberBox.getChildren().get(0);
+        bttn.setText(String.valueOf(testIndex-2));
+        bttn = (Button) pageNumberBox.getChildren().get(1);
+        bttn.setText(String.valueOf(testIndex-1));
+        bttn = (Button) pageNumberBox.getChildren().get(2);
+        bttn.setText(String.valueOf(testIndex));
+        bttn = (Button) pageNumberBox.getChildren().get(3);
+        bttn.setText(String.valueOf(testIndex+1));
+        bttn = (Button) pageNumberBox.getChildren().get(4);
+        bttn.setText(String.valueOf(testIndex+2));
+
+        if (curPageNum+2 >= maxPageCount){
+            bttn = (Button) pageNumberBox.getChildren().get(5-(maxPageCount-curPageNum));
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }else if (curPageNum > 1){
+            bttn = (Button) pageNumberBox.getChildren().get(2);
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }
+        else {
+            bttn = (Button) pageNumberBox.getChildren().get(curPageNum);
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }
+
+        if(prevPage != curPageNum){
+            updatePageView();
+        }
+    }
+
+    public void changePageRight(){
+        if (curPageNum >= maxPageCount-1){
+            return;
+        }
+
+        if (prevButton != null) {
+            prevButton.setUnderline(false);
+        }
+
+        Button bttn = null;
+        int testIndex = 0;
+
+        curPageNum++;
+
+        testIndex = curPageNum;
+
+        if (testIndex-2 <= 0) {
+            testIndex = 3;
+        }else if (testIndex+2 >= maxPageCount) {
+            testIndex = maxPageCount - 2;
+        } else{
+            testIndex = curPageNum+1;
+        }
+
+        bttn = (Button) pageNumberBox.getChildren().get(0);
+        bttn.setText(String.valueOf(testIndex-2));
+        bttn = (Button) pageNumberBox.getChildren().get(1);
+        bttn.setText(String.valueOf(testIndex-1));
+        bttn = (Button) pageNumberBox.getChildren().get(2);
+        bttn.setText(String.valueOf(testIndex));
+        bttn = (Button) pageNumberBox.getChildren().get(3);
+        bttn.setText(String.valueOf(testIndex+1));
+        bttn = (Button) pageNumberBox.getChildren().get(4);
+        bttn.setText(String.valueOf(testIndex+2));
+
+        if (curPageNum+2 >= maxPageCount){
+            bttn = (Button) pageNumberBox.getChildren().get(5-(maxPageCount-curPageNum));
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }else if (curPageNum > 1){
+            bttn = (Button) pageNumberBox.getChildren().get(2);
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }
+        else {
+            bttn = (Button) pageNumberBox.getChildren().get(curPageNum);
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }
+
+        updatePageView();
+    }
+
+    public void changePageLeft(){
+        if (curPageNum <= 0){
+            return;
+        }
+
+        if (prevButton != null) {
+            prevButton.setUnderline(false);
+        }
+
+        Button bttn = null;
+        int testIndex = 0;
+
+        curPageNum--;
+
+        testIndex = curPageNum;
+
+        if (testIndex-2 <= 0) {
+            testIndex = 3;
+        }else if (testIndex+2 >= maxPageCount) {
+            testIndex = maxPageCount - 2;
+        } else{
+            testIndex = curPageNum+1;
+        }
+
+        bttn = (Button) pageNumberBox.getChildren().get(0);
+        bttn.setText(String.valueOf(testIndex-2));
+        bttn = (Button) pageNumberBox.getChildren().get(1);
+        bttn.setText(String.valueOf(testIndex-1));
+        bttn = (Button) pageNumberBox.getChildren().get(2);
+        bttn.setText(String.valueOf(testIndex));
+        bttn = (Button) pageNumberBox.getChildren().get(3);
+        bttn.setText(String.valueOf(testIndex+1));
+        bttn = (Button) pageNumberBox.getChildren().get(4);
+        bttn.setText(String.valueOf(testIndex+2));
+
+        if (curPageNum+2 >= maxPageCount){
+            bttn = (Button) pageNumberBox.getChildren().get(5-(maxPageCount-curPageNum));
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }else if (curPageNum > 1){
+            bttn = (Button) pageNumberBox.getChildren().get(2);
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }
+        else {
+            bttn = (Button) pageNumberBox.getChildren().get(curPageNum);
+            bttn.setUnderline(true);
+            bttn.requestFocus();
+            prevButton = bttn;
+        }
+
+        updatePageView();
+    }
+
+    private void updatePageView(){
+        int curIndexSet = curPageNum*songViewList.length;
+
+        for (int i=0; i<songViewList.length; i++){
+            if(curIndexSet+i >= songDB.length){
+                songViewList[i].updateVisible(false);
+            }else {
+                songViewList[i].updateVisible(true);
+                songViewList[i].updateView(songDB[curIndexSet+i]);
+            }
+        }
+    }
+
+    private Parent createSongData(String[] songData){
+        Parent root = null;
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("song-ui.fxml"));
+            root = loader.load();
+            songViewList[songIndex] = loader.getController();
+
+            //changes song name to the file name need to update it to name of song NOT file
+            Label numberLabel = (Label) root.lookup("#numberLabel");
+            Label songLabel = (Label) root.lookup("#songLabel");
+            Label durLabel = (Label) root.lookup("#durLabel");
+            Label albLabel = (Label) root.lookup("#albumLabel");
+            Label artLabel = (Label) root.lookup("#artistLabel");
+            numberLabel.setText(String.valueOf(" "));
+            songLabel.setText(songData[0]);
+            durLabel.setText(songData[2]);
+            albLabel.setText("Unkown");
+            artLabel.setText(songData[1]);
+
+            root.setUserData(songData);
+
+            ImageView image =  (ImageView) root.lookup("#heartImage");
+            image.setVisible(false);
+            //Button bttn = (Button) root.lookup("#favButton");
+            //bttn.setVisible(false);
+
+            songViewList[songIndex].setRoot(root);
+            songIndex++;
+
+            Parent finalRoot = root;
+            root.setOnMouseClicked(event -> {
+                // Remove highlight from the previously selected song
+                if (selectedSongItem != null) {
+                    selectedSongItem.getStyleClass().remove("selected-song");
+                }
+
+                // Highlight the clicked song item
+                finalRoot.getStyleClass().add("selected-song");
+                selectedSongItem = finalRoot;
+
+                String[] songInfo = (String[]) selectedSongItem.getUserData();
+                PlayerController.getInstance().playDiscoverSong(songInfo);//selectSong(songIndex);
+
+            });
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return root;
     }
 }

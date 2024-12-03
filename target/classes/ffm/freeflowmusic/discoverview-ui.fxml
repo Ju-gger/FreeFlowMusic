@@ -9,8 +9,8 @@
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="527.0" prefWidth="1400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ffm.freeflowmusic.DiscoverController">
    <children>
-      <VBox fx:id="PageViewBox" alignment="CENTER" layoutX="214.0" layoutY="16.0" prefHeight="444.0" prefWidth="973.0" />
-      <Button layoutX="311.0" layoutY="473.0" mnemonicParsing="false" onAction="#testFunc" prefHeight="38.0" prefWidth="43.0">
+      <VBox fx:id="pageViewBox" alignment="CENTER" layoutX="214.0" layoutY="16.0" prefHeight="444.0" prefWidth="973.0" />
+      <Button layoutX="311.0" layoutY="473.0" mnemonicParsing="false" onAction="#changePageLeft" prefHeight="38.0" prefWidth="43.0">
          <graphic>
             <ImageView fitHeight="38.0" fitWidth="23.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -19,8 +19,15 @@
             </ImageView>
          </graphic>
       </Button>
-      <HBox fx:id="pageNumberBox" alignment="CENTER" layoutX="374.0" layoutY="473.0" prefHeight="38.0" prefWidth="653.0" />
-      <Button layoutX="1047.0" layoutY="473.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="43.0">
+      <HBox fx:id="pageNumberBox" alignment="CENTER" layoutX="374.0" layoutY="473.0" prefHeight="38.0" prefWidth="653.0" spacing="50.0">
+         <children>
+            <Button fx:id="pg0" mnemonicParsing="false" onAction="#onPageChange" text="1" />
+            <Button fx:id="pg1" layoutX="325.0" layoutY="17.0" mnemonicParsing="false" onAction="#onPageChange" text="2" />
+            <Button fx:id="pg2" layoutX="337.0" layoutY="17.0" mnemonicParsing="false" onAction="#onPageChange" text="3" />
+            <Button fx:id="pg3" layoutX="348.0" layoutY="17.0" mnemonicParsing="false" onAction="#onPageChange" text="4" />
+            <Button fx:id="pg4" layoutX="360.0" layoutY="17.0" mnemonicParsing="false" onAction="#onPageChange" text="5" />
+         </children></HBox>
+      <Button layoutX="1047.0" layoutY="473.0" mnemonicParsing="false" onAction="#changePageRight" prefHeight="38.0" prefWidth="43.0">
          <graphic>
             <ImageView fitHeight="38.0" fitWidth="23.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true">
                <image>

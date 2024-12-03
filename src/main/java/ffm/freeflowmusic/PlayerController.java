@@ -60,7 +60,7 @@ public class PlayerController implements Initializable { //removed for now to te
     private MediaPlayer mediaPlayer;
     private File directory;
     private File[] files;   // File of songs
-    private static ArrayList<File> songQueue = new ArrayList<File>(); // For mp3 files songs
+    private ArrayList<File> songQueue = new ArrayList<File>(); // For mp3 files songs
     private int songNumber = 0; // index out of array of songs
     private Timer timer; // track our progressBar
     private TimerTask task;
@@ -111,17 +111,6 @@ public class PlayerController implements Initializable { //removed for now to te
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle){
-
-        //https://www.no-copyright-music.com/wp-content/uploads/2021/10/Forestal.mp3
-        //https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/936/royalty-1619082033-7RC2AlRdd1.mp3
-
-        //String audioUrl = "https://ncsmusic.s3.eu-west-1.amazonaws.com/tracks/000/000/936/royalty-1619082033-7RC2AlRdd1.mp3";//"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3";
-
-        //media = new Media(audioUrl);
-        // initializing media player
-        //mediaPlayer = new MediaPlayer(media);
-
-
         volumeSlider.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -131,7 +120,6 @@ public class PlayerController implements Initializable { //removed for now to te
 
         songDurationBar.setStyle("-fx-accent: #000000;");
 
-        //mediaPlayer.play();
     }
 
     /*plays a singular song selected from music list
@@ -141,6 +129,7 @@ public class PlayerController implements Initializable { //removed for now to te
     *   -update this method and songQueue var to no longer be static look at discoverController to see an example of how
     * */
     public void selectSong(int songNum){
+        songQueue.clear();
         File song = SongViewController.getSong(songNum); // Get the selected song file
 
         // Set the current song number to the selected song index
@@ -227,7 +216,6 @@ public class PlayerController implements Initializable { //removed for now to te
         }
     }
 
-
     // The next song could be any random song in the array except for the current one
     //update to use a queue structure that pops index and moves it to spare array
     public void Shuffle() {
@@ -243,15 +231,23 @@ public class PlayerController implements Initializable { //removed for now to te
 
     // Previous and Next Song Helper
     private void playSelectedSong() {
+        File selectedSong = null;
         mediaPlayer.stop();
 
         if (isRunning) {
             cancelTimer();
         }
 
-        media = new Media(songQueue.get(songNumber).toURI().toString());
+        if (songQueue.isEmpty()){
+            selectedSong = SongViewController.getSong(songNumber);
+        }else{
+            selectedSong = songQueue.get(songNumber);
+        }
+
+        media = new Media(selectedSong.toURI().toString());
         mediaPlayer = new MediaPlayer(media);
-        Platform.runLater(()->songLabel.setText(songQueue.get(songNumber).getName()));
+        File finalSelectedSong = selectedSong;
+        Platform.runLater(()->songLabel.setText(finalSelectedSong.getName()));
         //songLabel.setText(songQueue.get(songNumber).getName());
 
         mediaPlayer.setVolume(volumeSlider.getValue() * 0.01); // Set initial volume
@@ -267,13 +263,19 @@ public class PlayerController implements Initializable { //removed for now to te
             songDurationBar.setProgress(0);
             mediaPlayer.seek(seconds(0));
         } else { // go to the previous song
-            songNumber = (songNumber > 0) ? songNumber - 1 : songQueue.size() - 1; // if the songNumber is greater than 0 SongNumber-= 1 else go to last song
+            if(!songQueue.isEmpty()){
+                songNumber = (songNumber > 0) ? songNumber - 1 : songQueue.size() - 1; // if the songNumber is greater than 0 SongNumber-= 1 else go to last song
+            }
+            songNumber = (songNumber > 0) ? songNumber - 1 : 0;
             playSelectedSong();
         }
     }
 
     public void NextSong() {
-        songNumber = (songNumber < songQueue.size() - 1) ? songNumber + 1 : 0; // if the songNumber is less than 0 SongNumber += 1 else go to first song
+        if(!songQueue.isEmpty()){
+            songNumber = (songNumber < songQueue.size() - 1) ? songNumber + 1 : 0; // if the songNumber is less than 0 SongNumber += 1 else go to first song
+        }
+        songNumber++;
         playSelectedSong();
     }
 
@@ -311,12 +313,22 @@ public class PlayerController implements Initializable { //removed for now to te
         timer.cancel();
     }
 
+    public void playDiscoverSong(String[] songInfo) {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            cancelTimer();
+        }
 
-    //Test method called by discoverController to see if media player will update when called.
-    public void setSong(String[] songInfo) {
-        Platform.runLater(()->songLabel.setText(songInfo[0]));
+        // Create a new MediaPlayer for the selected song
         media = new Media(songInfo[3]);
         mediaPlayer = new MediaPlayer(media);
+
+        // Update the song label
+        Platform.runLater(() -> songLabel.setText(songInfo[0]));
+
+        // Play the selected song
+        mediaPlayer.setVolume(volumeSlider.getValue() * 0.01);
+        beginTimer(); // Start the timer for the progress bar
         mediaPlayer.play();
     }
 }

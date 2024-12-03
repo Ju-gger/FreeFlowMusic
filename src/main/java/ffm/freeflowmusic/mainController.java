@@ -67,8 +67,9 @@ public class mainController implements Initializable {
 
         //method uses loader to first pass our media player loaded earlier to our DiscoverController/discover view for it to use.
         try {
+            //root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("discoverview-ui.fxml")));
             FXMLLoader loader = new FXMLLoader(getClass().getResource("discoverview-ui.fxml"));
-            loader.setControllerFactory(mainController -> new DiscoverController(mediaPlayer));
+            //loader.setControllerFactory(mainController -> new DiscoverController(mediaPlayer));
             root = loader.load();
 
         } catch (IOException e) {

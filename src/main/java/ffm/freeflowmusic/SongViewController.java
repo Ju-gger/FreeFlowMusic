@@ -78,7 +78,7 @@ public class SongViewController implements Initializable {
 
     //remove static key from this method can pass this class to the song view to do so
     public static File getSong(int songNum){
-        return songs.get(songNum);
+        return songs.get(songNum % songs.size());
     }
 
     //method called by songs in list need to pass this class to the created Song Controllers to remove static keyword.
@@ -124,22 +124,22 @@ public class SongViewController implements Initializable {
     private Parent createSongData(File file, int songNum, boolean visFlag){
         Parent root = null;
 
-
-
         try {
-            root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("song-ui.fxml")));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("song-ui.fxml"));
+            root = loader.load();
 
             //changes song name to the file name need to update it to name of song NOT file
             Label numberLabel = (Label) root.lookup("#numberLabel");
             Label songLabel = (Label) root.lookup("#songLabel");
             numberLabel.setText(String.valueOf(songNum));
             songLabel.setText(file.getName());
+            root.setUserData(songNum - 1);
 
             if(visFlag){
                 ImageView image =  (ImageView) root.lookup("#heartImage");
                 image.setVisible(false);
-                Button bttn = (Button) root.lookup("#favButton");
-                bttn.setVisible(false);
+                //Button bttn = (Button) root.lookup("#favButton");
+                //bttn.setVisible(false);
             }
 
 
@@ -157,8 +157,8 @@ public class SongViewController implements Initializable {
                 selectedSongItem = finalRoot;
 
                 // Call the songSelected method manually
-                int songIndex = Integer.parseInt(numberLabel.getText()) - 1;
-                System.out.println("Selected song index: " + songIndex + 1);
+                int songIndex = (int) selectedSongItem.getUserData();// Integer.parseInt(numberLabel.getText()) - 1;
+                System.out.println("Selected song index: " + songIndex);
 
                 PlayerController.getInstance().selectSong(songIndex);
 
